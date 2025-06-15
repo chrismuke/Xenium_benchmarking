@@ -1,6 +1,7 @@
 library("Seurat")
 
-path='/media/sergio/xenium_b_and_heart/Xenium_benchmarking-main/data/scRNAseq_for_simulations_Xenium_like'
+# path='/media/sergio/xenium_b_and_heart/Xenium_benchmarking-main/data/scRNAseq_for_simulations_Xenium_like'
+path='./data/scRNAseq_for_simulations'
 fils=list.files(path)
 
 ######## FUNCTIONS#####################
