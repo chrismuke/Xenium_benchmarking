@@ -13,9 +13,11 @@ from anndata import AnnData
 import json
 from sklearn.metrics import mutual_info_score
 from sklearn.metrics import fowlkes_mallows_score
+import random
+from tqdm import tqdm
 
 def missegmentation_simulation(adata_sc_sub,missegmentation_percentage=0.1):
-     """ Simulate missegmentation using a reference single cell data in adata form. 
+    """ Simulate missegmentation using a reference single cell data in adata form. 
    
     Parameters:
     adata_sc_sub (AnnData): AnnData object with the cells of the experiment before simulating the missegmentation   
@@ -24,7 +26,7 @@ def missegmentation_simulation(adata_sc_sub,missegmentation_percentage=0.1):
     Returns:
     adata_sc_sub(AnnData): AnnData object with the cells where missegmentation has been simulated according to input parameters
 
-   """
+    """
     exp=adata_sc_sub.to_df()
     if missegmentation_percentage>0:
         cells_affected=int(exp.shape[0]*(missegmentation_percentage/100))
@@ -161,7 +163,7 @@ def compute_fmi(ground_truth, predicted):
 
 
 def keep_nuclei_and_quality(adata1,overlaps_nucleus=1,qvmin=20):
-     """ Redefine cell expression based on nuclei expression an quality of detected reads
+    """ Redefine cell expression based on nuclei expression an quality of detected reads
    
     Parameters:
     adata1 (AnnData): AnnData object with the cells of the experiment before filtereing reads based on quality or nuclear/non-nuclear
@@ -171,8 +173,8 @@ def keep_nuclei_and_quality(adata1,overlaps_nucleus=1,qvmin=20):
     Returns:
     adata1nuc(AnnData): AnnData object with the cells redefined based to input parameters
 
-   """
-     if overlaps_nucleus==1:
+    """
+    if overlaps_nucleus==1:
         subset1=adata1.uns['spots'].loc[adata1.uns['spots']['overlaps_nucleus']==overlaps_nucleus,:]
     if overlaps_nucleus==0:
         subset1=adata1.uns['spots']
@@ -190,7 +192,7 @@ def keep_nuclei_and_quality(adata1,overlaps_nucleus=1,qvmin=20):
 # using a baseline, modify parameters one by one
 # making it into a function
 def allcombs(adata):
-     """ Simulate preprocessing workflows and extract results based on it
+    """ Simulate preprocessing workflows and extract results based on it
    
     Parameters:
     adata (AnnData): AnnData object with the cells of the experiment 
@@ -198,8 +200,8 @@ def allcombs(adata):
     Returns:
     allres(DataFrame): Clustering obtained with different preprocessing workflows
 
-   """
-     default={'nuc':1,'npcs':0,'neighs':16,'qvs':0,'scale':True,'hvgs':False,'ts':100,'norm':True,'lg':True} 
+    """
+    default={'nuc':1,'npcs':0,'neighs':16,'qvs':0,'scale':True,'hvgs':False,'ts':100,'norm':True,'lg':True} 
     try:
         del allres
     except:
@@ -265,7 +267,7 @@ def allcombs(adata):
 
 def main_preprocessing(adata,target_sum=100,mincounts=10,mingenes=3,neigh=15,npc=0,nuc=1,scale=False,hvg=False,default=False,total_clusters=30,default_resol=1.6,logstatus=True,normstatus=True):
 
-         """ preprocess and cluster cells in an Anndata object given some input parameters
+    """ preprocess and cluster cells in an Anndata object given some input parameters
    
     Parameters:
     adata(AnnData): AnnData object with the cells of the experiment before simulating the missegmentation   
@@ -286,11 +288,11 @@ def main_preprocessing(adata,target_sum=100,mincounts=10,mingenes=3,neigh=15,npc
     Returns:
     adata(AnnData): AnnData object after preprocessing and clustering
 
-   """
+    """
      
      
      
-     adata.layers['raw']=adata.X.copy()
+    adata.layers['raw']=adata.X.copy()
     sc.pp.filter_cells(adata,min_counts=mincounts)
     sc.pp.filter_cells(adata,min_genes=mingenes)
     adata.raw=adata
@@ -367,7 +369,7 @@ def allcombs_simulated(adata,default_key='class'):
    """
      
      
-     default={'nuc':1,'npcs':0,'neighs':12,'qvs':0,'scale':False,'hvgs':False,'ts':1000000}# default is never done
+    default={'nuc':1,'npcs':0,'neighs':12,'qvs':0,'scale':False,'hvgs':False,'ts':1000000}# default is never done
     try:
         del allres
     except:
